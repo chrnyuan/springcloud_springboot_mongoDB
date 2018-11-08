@@ -4,13 +4,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * 用户反馈实体
+ * 用户按一按行为实体
  * 
  * @author Administrator
  *
  */
-@Document(collection = "MemberFeedBack")
-public class MemberFeedBackEntity {
+@Document(collection = "MemberPress")
+public class MemberPressEntity {
 	
 	/**
 	 * id属性是给mongodb用的，用@Id注解修饰
@@ -18,7 +18,7 @@ public class MemberFeedBackEntity {
     @Id
     private String id;
     /**
-     * 反馈行为时间
+     * 按一按行为时间
      */
     private long timestamp;
     /**
@@ -35,10 +35,6 @@ public class MemberFeedBackEntity {
      */
     private String deviceMac;
     
-    /**
-     * 反馈类型（like:喜欢，dislike:不喜欢）
-     */
-    private String feedBackType;
 	public String getId() {
 		return id;
 	}
@@ -62,12 +58,6 @@ public class MemberFeedBackEntity {
 	}
 	public void setDeviceMac(String deviceMac) {
 		this.deviceMac = deviceMac;
-	}
-	public String getFeedBackType() {
-		return feedBackType;
-	}
-	public void setFeedBackType(String feedBackType) {
-		this.feedBackType = feedBackType;
 	}
 	public String getUnitId() {
 		return unitId;

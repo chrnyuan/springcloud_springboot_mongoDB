@@ -1,6 +1,6 @@
 spring:
   data:
     mongodb:
-      host: ip地址
+      host: 119.23.231.196
       port: 27017
       database: recommend 

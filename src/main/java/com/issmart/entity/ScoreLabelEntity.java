@@ -8,6 +8,11 @@ package com.issmart.entity;
  */
 public class ScoreLabelEntity {
 	
+	/**
+     * unitId
+     */
+    private String unitId;
+	
 	private String labelId;
 	
 	private double score;
@@ -35,5 +40,13 @@ public class ScoreLabelEntity {
 
 	public void setScore(double score) {
 		this.score = score;
+	}
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 }

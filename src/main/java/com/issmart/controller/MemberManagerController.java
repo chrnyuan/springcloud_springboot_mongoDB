@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberInfoEntity;
+import com.issmart.entity.MemberPressEntity;
 import com.issmart.entity.MemberVisitEntity;
 import com.issmart.entity.ResponseResult;
 import com.issmart.service.MemberService;
@@ -71,7 +72,7 @@ public class MemberManagerController {
 	}
 	
 	/**
-	 * 新建用户感兴趣反馈数据
+	 * 新建用户反馈数据
 	 * 
 	 * @return
 	 */
@@ -79,8 +80,21 @@ public class MemberManagerController {
 	@RequestMapping(value = "insert/member/feedback", method = RequestMethod.POST)
 	public @ResponseBody ResponseResult<Integer> insertLikeFeedBack(@RequestBody MemberFeedBackEntity memberFeedBackEntity) {
 		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
-		memberFeedBackEntity.setTimestamp(System.currentTimeMillis());
 		memberService.insertFeedBack(memberFeedBackEntity);
+		responseResult.setData(1);
+		return responseResult;
+	}
+	
+	/**
+	 * 新建用户按一按数据
+	 * 
+	 * @return
+	 */
+	@ApiOperation(value = "新建用户按一按数据")
+	@RequestMapping(value = "insert/member/press", method = RequestMethod.POST)
+	public @ResponseBody ResponseResult<Integer> insertPress(@RequestBody MemberPressEntity memberPressEntity) {
+		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
+		memberService.insertPress(memberPressEntity);
 		responseResult.setData(1);
 		return responseResult;
 	}

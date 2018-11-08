@@ -20,6 +20,10 @@ public class RecommendCollectionEntity {
     @Id
     private String id;
     /**
+     * unitId
+     */
+    private String unitId;
+    /**
      * beaconMac
      */
     private String beaconMac;
@@ -60,5 +64,13 @@ public class RecommendCollectionEntity {
 
 	public void setCreatedTimeStamp(long createdTimeStamp) {
 		this.createdTimeStamp = createdTimeStamp;
+	}
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 }

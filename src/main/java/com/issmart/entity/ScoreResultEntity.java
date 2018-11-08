@@ -7,6 +7,11 @@ package com.issmart.entity;
  *
  */
 public class ScoreResultEntity {
+	
+	/**
+     * unitId
+     */
+    private String unitId;
 
 	/**
 	 * boothId
@@ -54,5 +59,13 @@ public class ScoreResultEntity {
 
 	public void setResetBehavior(boolean resetBehavior) {
 		this.resetBehavior = resetBehavior;
+	}
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 }

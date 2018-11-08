@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberInfoEntity;
+import com.issmart.entity.MemberPressEntity;
 import com.issmart.entity.MemberVisitEntity;
 
 @Service
@@ -29,4 +30,11 @@ public interface MemberService{
 	 * @return
 	 */
 	public MemberFeedBackEntity insertFeedBack(MemberFeedBackEntity memberFeedBackEntity);
+	
+	/**
+	 * 新建用户按一按行为
+	 * 
+	 * @return
+	 */
+	public MemberPressEntity insertPress(MemberPressEntity memberPressEntity);
 }

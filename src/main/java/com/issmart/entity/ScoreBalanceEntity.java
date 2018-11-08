@@ -11,6 +11,11 @@ package com.issmart.entity;
 public class ScoreBalanceEntity {
 	
 	/**
+     * unitId
+     */
+    private String unitId;
+	
+	/**
 	 * deviceMac
 	 */
 	private String deviceMac;
@@ -121,5 +126,13 @@ public class ScoreBalanceEntity {
 
 	public void setExistDisLikeBehavior(boolean existDisLikeBehavior) {
 		this.existDisLikeBehavior = existDisLikeBehavior;
+	}
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 }
