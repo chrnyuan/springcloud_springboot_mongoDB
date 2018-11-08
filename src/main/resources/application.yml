@@ -1,0 +1,10 @@
+server:
+  port: 8080
+  
+spring:
+  profiles:
+    active: mongodb
+
+logging:
+  config: classpath:log4j2.xml
+  

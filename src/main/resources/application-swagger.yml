@@ -1,0 +1,10 @@
+spring:
+  swagger:
+    enabled: true
+    title: 推荐系统api
+    description: 推荐系统接口
+    version: 1.1.0
+    contact:
+      name: 崔志祥
+    base-package: com.issmart.controller
+   
