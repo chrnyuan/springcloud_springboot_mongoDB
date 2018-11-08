@@ -14,7 +14,7 @@ import com.issmart.entity.MemberFindLogEntity;
 @Repository
 public interface MemberFindLogRepository extends MongoRepository<MemberFindLogEntity, String> {
 	 
-	int deleteByBeaconMac(String beaconMac);
+	int deleteByUnitIdAndBeaconMac(String unitId,String beaconMac);
 	
-	MemberFindLogEntity findByBeaconMac(String beaconMac);
+	MemberFindLogEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac);
 }

@@ -10,7 +10,7 @@ import com.issmart.entity.BoothInfoEntity;
 @Repository
 public interface BoothRepository extends MongoRepository<BoothInfoEntity, String> {
 	 
-	int deleteByDeviceMac(String deviceMac);
+	int deleteByUnitIdAndDeviceMac(String unitId,String deviceMac);
 	
-	List<BoothInfoEntity> findByDeviceMac(String deviceMac);
+	List<BoothInfoEntity> findByUnitIdAndDeviceMac(String unitId,String deviceMac);
 }

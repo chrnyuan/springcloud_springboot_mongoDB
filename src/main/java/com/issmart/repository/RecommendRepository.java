@@ -8,7 +8,7 @@ import com.issmart.entity.RecommendCollectionEntity;
 @Repository
 public interface RecommendRepository extends MongoRepository<RecommendCollectionEntity, String> {
 	 
-	int deleteByBeaconMac(String beaconMac);
+	int deleteByUnitIdAndBeaconMac(String unitId,String beaconMac);
 	
-	RecommendCollectionEntity findByBeaconMac(String beaconMac);
+	RecommendCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac);
 }

@@ -19,7 +19,7 @@ public class BoothServiceImpl implements BoothService{
 
 	@Override
 	public BoothInfoEntity insert(BoothInfoEntity boothInfoEntity) {
-		boothRepository.deleteByDeviceMac(boothInfoEntity.getDeviceMac());
+		boothRepository.deleteByUnitIdAndDeviceMac(boothInfoEntity.getUnitId(),boothInfoEntity.getDeviceMac());
 		boothInfoEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		BoothInfoEntity boothInfoEntityResult = boothRepository.insert(boothInfoEntity);
 		logger.info("更新展台"+boothInfoEntityResult.getDeviceMac());

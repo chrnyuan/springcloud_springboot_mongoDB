@@ -16,5 +16,5 @@ public interface MemberFeedBackRepository extends MongoRepository<MemberFeedBack
 	 * @param beaconMac
 	 * @return
 	 */
-	List<MemberFeedBackEntity> findByBeaconMacAndTimestampGreaterThanEqual(String beaconMac, long timestamp);
+	List<MemberFeedBackEntity> findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(String unitId,String beaconMac, long timestamp);
 }

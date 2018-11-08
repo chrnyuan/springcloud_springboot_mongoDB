@@ -3,11 +3,6 @@ package com.issmart.entity;
 import java.util.List;
 
 public class RecommendInfoEntity {
-	
-	/**
-     * unitId
-     */
-    private String unitId;
 
 	 /**
      * boothId
@@ -49,11 +44,5 @@ public class RecommendInfoEntity {
 	}
 	public void setDeviceMacList(List<String> deviceMacList) {
 		this.deviceMacList = deviceMacList;
-	}
-	public String getUnitId() {
-		return unitId;
-	}
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
 	}
 }

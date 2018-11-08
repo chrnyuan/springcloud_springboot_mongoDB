@@ -51,12 +51,13 @@ public class RecommendController {
 	 */
 	@ApiOperation(value = "查询推荐信息",notes="查询推荐信息")
 	@ApiImplicitParams({
+		@ApiImplicitParam(name = "unitId", value = "unitId",paramType = "query", dataType = "String",required=true),
 		@ApiImplicitParam(name = "beaconMac", value = "beaconMac",paramType = "query", dataType = "String",required=true),
 		@ApiImplicitParam(name = "boothSize", value = "boothSize",paramType = "query", dataType = "Integer",required=true)})
 	@RequestMapping(value = "query/recommend", method = RequestMethod.GET)
-	public @ResponseBody ResponseResult<RecommendCollectionEntity> findByBeaconMac(@RequestParam("beaconMac") String beaconMac,@RequestParam("boothSize") int boothSize) {
+	public @ResponseBody ResponseResult<RecommendCollectionEntity> findByBeaconMac(@RequestParam("unitId") String unitId,@RequestParam("beaconMac") String beaconMac,@RequestParam("boothSize") int boothSize) {
 		ResponseResult<RecommendCollectionEntity> responseResult = new ResponseResult<RecommendCollectionEntity>();
-		RecommendCollectionEntity resultData = recommendService.findByBeaconMac(beaconMac);
+		RecommendCollectionEntity resultData = recommendService.findByUnitIdAndBeaconMac(unitId,beaconMac);
 		List<RecommendInfoEntity> RecommendInfoList = resultData.getRecommendInfoList();
 		Collections.sort(RecommendInfoList, new Comparator<RecommendInfoEntity>() {
 			@Override
@@ -74,7 +75,7 @@ public class RecommendController {
 			boothSize = RecommendInfoList.size();
 		}
 		resultData.setRecommendInfoList(RecommendInfoList.subList(0, boothSize));
-		recommendService.updateRecommendCollection(beaconMac);
+		recommendService.updateRecommendCollection(unitId,beaconMac);
 		responseResult.setData(resultData);
 		return responseResult;
 	}

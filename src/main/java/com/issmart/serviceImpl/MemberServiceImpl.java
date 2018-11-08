@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberInfoEntity insert(MemberInfoEntity memberInfoEntity) {
-		memberRepository.deleteByBeaconMac(memberInfoEntity.getBeaconMac());
+		memberRepository.deleteByUnitIdAndBeaconMac(memberInfoEntity.getUnitId(),memberInfoEntity.getBeaconMac());
 		memberInfoEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		MemberInfoEntity memberInfoEntityResult = memberRepository.insert(memberInfoEntity);
 		logger.info("更新展台"+memberInfoEntityResult.getBeaconMac());

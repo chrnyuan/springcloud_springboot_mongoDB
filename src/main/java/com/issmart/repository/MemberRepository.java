@@ -8,7 +8,7 @@ import com.issmart.entity.MemberInfoEntity;
 @Repository
 public interface MemberRepository extends MongoRepository<MemberInfoEntity, String> {
 	 
-	int deleteByBeaconMac(String beaconMac);
+	int deleteByUnitIdAndBeaconMac(String unitIid,String beaconMac);
 	
-	MemberInfoEntity findByBeaconMac(String beaconMac);
+	MemberInfoEntity findByUnitIdAndBeaconMac(String unitIid,String beaconMac);
 }

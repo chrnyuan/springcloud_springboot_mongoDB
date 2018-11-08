@@ -16,7 +16,7 @@ public interface MemberVisitRepository extends MongoRepository<MemberVisitEntity
 	 * @param beaconMac
 	 * @return
 	 */
-	List<MemberVisitEntity> findByBeaconMac(String beaconMac);
+	List<MemberVisitEntity> findByUnitIdAndBeaconMac(String unitId,String beaconMac);
 	
 	/**
 	 * 根据BeaconMac查询大于timestamp的访问数据
@@ -24,7 +24,7 @@ public interface MemberVisitRepository extends MongoRepository<MemberVisitEntity
 	 * @param beaconMac
 	 * @return
 	 */
-	List<MemberVisitEntity> findByBeaconMacAndTimestampGreaterThanEqual(String beaconMac,long timestamp);
+	List<MemberVisitEntity> findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(String unitId,String beaconMac,long timestamp);
 	
 	/**
 	 * 统计当前BeaconMac中大于timestamp的访问数据条数

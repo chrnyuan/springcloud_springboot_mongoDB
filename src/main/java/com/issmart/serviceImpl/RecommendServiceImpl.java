@@ -59,6 +59,7 @@ public class RecommendServiceImpl implements RecommendService {
 			List<BoothInfoEntity> boothInfoEntityList = boothRepository.findAll();
 			for (MemberInfoEntity memberInfoEntity : memberInfoEntityList) {
 				RecommendCollectionEntity recommendCollectionEntity = new RecommendCollectionEntity();
+				recommendCollectionEntity.setUnitId(memberInfoEntity.getUnitId());
 				recommendCollectionEntity.setBeaconMac(memberInfoEntity.getBeaconMac());
 				opeRecommendCollection(recommendCollectionEntity, boothInfoEntityList);
 				logger.info("推荐系统冷启动成功");
@@ -76,7 +77,7 @@ public class RecommendServiceImpl implements RecommendService {
 	 */
 	public RecommendCollectionEntity opeRecommendCollection(RecommendCollectionEntity recommendCollectionEntity,
 			List<BoothInfoEntity> boothInfoEntityList) {
-		MemberInfoEntity memberInfoEntity = memberRepository.findByBeaconMac(recommendCollectionEntity.getBeaconMac());
+		MemberInfoEntity memberInfoEntity = memberRepository.findByUnitIdAndBeaconMac(recommendCollectionEntity.getUnitId(),recommendCollectionEntity.getBeaconMac());
 		List<RecommendInfoEntity> recommendInfoList = new ArrayList<>();
 		for (BoothInfoEntity boothInfoEntity : boothInfoEntityList) {
 			List<String> deviceMacList = new ArrayList<String>();
@@ -96,7 +97,7 @@ public class RecommendServiceImpl implements RecommendService {
 		}
 		recommendCollectionEntity.setRecommendInfoList(recommendInfoList);
 		logger.info(recommendCollectionEntity.getBeaconMac() + "更新列表");
-		recommendRepository.deleteByBeaconMac(recommendCollectionEntity.getBeaconMac());
+		recommendRepository.deleteByUnitIdAndBeaconMac(recommendCollectionEntity.getUnitId(),recommendCollectionEntity.getBeaconMac());
 		recommendCollectionEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		return recommendRepository.insert(recommendCollectionEntity);
 	}
@@ -105,8 +106,8 @@ public class RecommendServiceImpl implements RecommendService {
 	 * 查询推荐信息
 	 */
 	@Override
-	public RecommendCollectionEntity findByBeaconMac(String beaconMac) {
-		return recommendRepository.findByBeaconMac(beaconMac);
+	public RecommendCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac) {
+		return recommendRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
 	}
 
 	/**
@@ -114,14 +115,14 @@ public class RecommendServiceImpl implements RecommendService {
 	 */
 	@Async
 	@Override
-	public void updateRecommendCollection(String beaconMac) {
+	public void updateRecommendCollection(String unitIid,String beaconMac) {
 		// 获取推荐集
-		RecommendCollectionEntity recommendCollectionEntity = recommendRepository.findByBeaconMac(beaconMac);
+		RecommendCollectionEntity recommendCollectionEntity = recommendRepository.findByUnitIdAndBeaconMac(unitIid,beaconMac);
 		// 查询出所有的展会信息
 		List<BoothInfoEntity> boothInfoEntityList = boothRepository.findAll();
 		// 获取上一次查询时间戳
 		long timeStamp = 1000000000000l;
-		MemberFindLogEntity memberFindLogEntity = memberFindLogRepository.findByBeaconMac(beaconMac);
+		MemberFindLogEntity memberFindLogEntity = memberFindLogRepository.findByUnitIdAndBeaconMac(unitIid,beaconMac);
 		if (memberFindLogEntity != null) {
 			timeStamp = memberFindLogEntity.getTimeStamp();
 		} else {
@@ -129,12 +130,12 @@ public class RecommendServiceImpl implements RecommendService {
 			memberFindLogEntity.setBeaconMac(beaconMac);
 		}
 		// 处理visit行为数据
-		List<ScoreBalanceEntity> memberVisitScoreBalanceList = opeMemberVisitData(beaconMac, timeStamp,
+		List<ScoreBalanceEntity> memberVisitScoreBalanceList = opeMemberVisitData(unitIid,beaconMac, timeStamp,
 				boothInfoEntityList);
 		// 获取分数平衡数据
 		List<ScoreBalanceEntity> scoreBalanceList = opeScoreBalanceList(memberVisitScoreBalanceList);
 		// 平衡数据计算反馈数据生成新的平衡数据
-		opeMemberFeedBackData(beaconMac,timeStamp,scoreBalanceList);
+		opeMemberFeedBackData(unitIid,beaconMac,timeStamp,scoreBalanceList);
 		/**
 		 * 没有新的行为数据产生
 		 */
@@ -146,12 +147,12 @@ public class RecommendServiceImpl implements RecommendService {
 		List<ScoreResultEntity> scoreResultEntityList = opeScoreBalance(scoreBalanceList, recommendCollectionEntity, boothInfoEntityList);
 		// 更新推荐列表
 		opeGetNewRecommend(recommendCollectionEntity,scoreResultEntityList);
-		recommendRepository.deleteByBeaconMac(recommendCollectionEntity.getBeaconMac());
+		recommendRepository.deleteByUnitIdAndBeaconMac(recommendCollectionEntity.getUnitId(),recommendCollectionEntity.getBeaconMac());
 		recommendCollectionEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		logger.info("更新推荐列表结果："+recommendRepository.insert(recommendCollectionEntity));
 		// 更新查询访问日志
 		memberFindLogEntity.setTimeStamp(System.currentTimeMillis());
-		memberFindLogRepository.deleteByBeaconMac(beaconMac);
+		memberFindLogRepository.deleteByUnitIdAndBeaconMac(unitIid,beaconMac);
 		memberFindLogRepository.insert(memberFindLogEntity);
 	}
 
@@ -160,11 +161,11 @@ public class RecommendServiceImpl implements RecommendService {
 	 * 
 	 * @param recommendCollectionEntity
 	 */
-	private List<ScoreBalanceEntity> opeMemberVisitData(String beaconMac, long timeStamp,
+	private List<ScoreBalanceEntity> opeMemberVisitData(String unitId,String beaconMac, long timeStamp,
 			List<BoothInfoEntity> boothInfoEntityList) {
 		List<ScoreBalanceEntity> visitScoreBalanceList = new ArrayList<>();
 		List<MemberVisitEntity> MemberVisitEntityList = memberVisitRepository
-				.findByBeaconMacAndTimestampGreaterThanEqual(beaconMac, timeStamp);
+				.findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(unitId,beaconMac, timeStamp);
 		// 没有访问行为
 		if (MemberVisitEntityList.size() == 0) {
 			return visitScoreBalanceList;
@@ -200,9 +201,9 @@ public class RecommendServiceImpl implements RecommendService {
 	 * 
 	 * @param recommendCollectionEntity
 	 */
-	private void opeMemberFeedBackData(String beaconMac, long timestamp,List<ScoreBalanceEntity> scoreBalanceList) {
+	private void opeMemberFeedBackData(String unitId,String beaconMac, long timestamp,List<ScoreBalanceEntity> scoreBalanceList) {
 		// 查询反馈数据
-		List<MemberFeedBackEntity> feedBackList = memberFeedBackRepository.findByBeaconMacAndTimestampGreaterThanEqual(beaconMac, timestamp);
+		List<MemberFeedBackEntity> feedBackList = memberFeedBackRepository.findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(unitId,beaconMac, timestamp);
 		// 没有反馈行为
 		if (feedBackList.size() == 0) return ;
 		for (MemberFeedBackEntity memberFeedBackEntity : feedBackList) {

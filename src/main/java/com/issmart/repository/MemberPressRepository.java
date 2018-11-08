@@ -16,5 +16,5 @@ public interface MemberPressRepository extends MongoRepository<MemberPressEntity
 	 * @param beaconMac
 	 * @return
 	 */
-	List<MemberPressEntity> findByBeaconMacAndTimestampGreaterThanEqual(String beaconMac, long timestamp);
+	List<MemberPressEntity> findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(String unitId,String beaconMac, long timestamp);
 }

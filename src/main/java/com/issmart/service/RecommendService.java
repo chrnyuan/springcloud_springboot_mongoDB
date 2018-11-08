@@ -20,12 +20,12 @@ public interface RecommendService{
 	 * 
 	 * @return
 	 */
-	public void updateRecommendCollection(String beaconMac);
+	public void updateRecommendCollection(String unitId,String beaconMac);
 	
 	/**
 	 * 根据BeaconMac查询推荐信息
 	 * 
 	 * @return
 	 */
-	public RecommendCollectionEntity findByBeaconMac(String beaconMac);
+	public RecommendCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac);
 }
