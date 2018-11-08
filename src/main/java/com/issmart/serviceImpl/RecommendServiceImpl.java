@@ -13,6 +13,7 @@ import com.issmart.entity.BoothInfoEntity;
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberFindLogEntity;
 import com.issmart.entity.MemberInfoEntity;
+import com.issmart.entity.MemberPressEntity;
 import com.issmart.entity.MemberVisitEntity;
 import com.issmart.entity.RecommendCollectionEntity;
 import com.issmart.entity.RecommendInfoEntity;
@@ -22,6 +23,7 @@ import com.issmart.entity.ScoreResultEntity;
 import com.issmart.repository.BoothRepository;
 import com.issmart.repository.MemberFeedBackRepository;
 import com.issmart.repository.MemberFindLogRepository;
+import com.issmart.repository.MemberPressRepository;
 import com.issmart.repository.MemberRepository;
 import com.issmart.repository.MemberVisitRepository;
 import com.issmart.repository.RecommendRepository;
@@ -51,7 +53,10 @@ public class RecommendServiceImpl implements RecommendService {
 	
 	@Autowired
 	private MemberFeedBackRepository memberFeedBackRepository;
-
+	
+	@Autowired
+	private MemberPressRepository memberPressRepository;
+	
 	@Override
 	public int firstStart() {
 		if (recommendRepository.count() == 0) {
@@ -136,6 +141,8 @@ public class RecommendServiceImpl implements RecommendService {
 		List<ScoreBalanceEntity> scoreBalanceList = opeScoreBalanceList(memberVisitScoreBalanceList);
 		// 平衡数据计算反馈数据生成新的平衡数据
 		opeMemberFeedBackData(unitIid,beaconMac,timeStamp,scoreBalanceList);
+		// 平衡数据计算按一按数据生成新的平衡数据
+		opeMemberPressData(unitIid,beaconMac,timeStamp,scoreBalanceList);
 		/**
 		 * 没有新的行为数据产生
 		 */
@@ -150,7 +157,7 @@ public class RecommendServiceImpl implements RecommendService {
 		recommendRepository.deleteByUnitIdAndBeaconMac(recommendCollectionEntity.getUnitId(),recommendCollectionEntity.getBeaconMac());
 		recommendCollectionEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		logger.info("更新推荐列表结果："+recommendRepository.insert(recommendCollectionEntity));
-		// 更新查询访问日志
+		// 更新查询访问日志时间戳
 		memberFindLogEntity.setTimeStamp(System.currentTimeMillis());
 		memberFindLogRepository.deleteByUnitIdAndBeaconMac(unitIid,beaconMac);
 		memberFindLogRepository.insert(memberFindLogEntity);
@@ -187,6 +194,10 @@ public class RecommendServiceImpl implements RecommendService {
 				}
 			}
 			if (score != 0) {
+				// 一次刷新，visit行为产生分值最多等于一单位的press行为分值
+				if(score > ScoreEnum.PRESSINFIVE.getValue()) {
+					score = ScoreEnum.PRESSINFIVE.getValue();
+				}
 				ScoreBalanceEntity scoreBalanceEntity = new ScoreBalanceEntity(boothInfoEntity.getDeviceMac());
 				scoreBalanceEntity.setScore(score);
 				scoreBalanceEntity.setLabelScore(score);
@@ -237,6 +248,61 @@ public class RecommendServiceImpl implements RecommendService {
 					scoreBalanceEntity.setExistLikeBehavior(true);
 				}
 				scoreBalanceEntity.setDeviceMac(memberFeedBackEntity.getDeviceMac());
+				scoreBalanceEntity.setLabelScore(score);
+				scoreBalanceList.add(scoreBalanceEntity);
+			}
+		}
+	}
+	
+	/**
+	 * 更新列表，计算用户按一按行为数据
+	 * 
+	 * @param recommendCollectionEntity
+	 */
+	private void opeMemberPressData(String unitId,String beaconMac, long timestamp,List<ScoreBalanceEntity> scoreBalanceList) {
+		// 查询按一按数据
+		List<MemberPressEntity> pressList = memberPressRepository.findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(unitId,beaconMac, timestamp);
+		// 没有按一按行为
+		if (pressList.size() == 0) return ;
+		for (MemberPressEntity memberPressEntity : pressList) {
+			double score = 0;
+			boolean flag = true;
+			// 平衡数据集中存在此反馈deviceMac
+			for (ScoreBalanceEntity scoreBalanceEntity : scoreBalanceList) {
+				if (memberPressEntity.getDeviceMac().equals(scoreBalanceEntity.getDeviceMac())) {
+					flag = false;
+					scoreBalanceEntity.setExistPressBehavior(true);
+					if ((System.currentTimeMillis() - memberPressEntity.getTimestamp()) < 300000) {
+						// 5分钟以内
+						score += ScoreEnum.PRESSINFIVE.getValue();
+					} else if ((System.currentTimeMillis() - memberPressEntity.getTimestamp()) > 600000) {
+						// 大于10分钟以内
+						score += ScoreEnum.PRESSOUTTEN.getValue();
+					} else {
+						// 大于5分钟小于10分钟
+						score += ScoreEnum.PRESSINFIVEANDTEN.getValue();
+					}
+				}
+				if (score != 0) {
+					// 累加标签分数
+					scoreBalanceEntity.setLabelScore(scoreBalanceEntity.getLabelScore() + score);
+				}
+			}
+			// 平衡数据集中不存在此按一按deviceMac
+			if (flag) {
+				ScoreBalanceEntity scoreBalanceEntity = new ScoreBalanceEntity();
+				scoreBalanceEntity.setExistPressBehavior(true);
+				if ((System.currentTimeMillis() - memberPressEntity.getTimestamp()) < 300000) {
+					// 5分钟以内
+					score += ScoreEnum.PRESSINFIVE.getValue();
+				} else if ((System.currentTimeMillis() - memberPressEntity.getTimestamp()) > 600000) {
+					// 大于10分钟以内
+					score += ScoreEnum.PRESSOUTTEN.getValue();
+				} else {
+					// 大于5分钟小于10分钟
+					score += ScoreEnum.PRESSINFIVEANDTEN.getValue();
+				}
+				scoreBalanceEntity.setDeviceMac(memberPressEntity.getDeviceMac());
 				scoreBalanceEntity.setLabelScore(score);
 				scoreBalanceList.add(scoreBalanceEntity);
 			}

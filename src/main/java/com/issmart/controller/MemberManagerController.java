@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberInfoEntity;
 import com.issmart.entity.MemberPressEntity;
+import com.issmart.entity.MemberStickEntity;
 import com.issmart.entity.MemberVisitEntity;
 import com.issmart.entity.ResponseResult;
 import com.issmart.service.MemberService;
@@ -95,6 +96,20 @@ public class MemberManagerController {
 	public @ResponseBody ResponseResult<Integer> insertPress(@RequestBody MemberPressEntity memberPressEntity) {
 		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
 		memberService.insertPress(memberPressEntity);
+		responseResult.setData(1);
+		return responseResult;
+	}
+	
+	/**
+	 * 新建用户贴一贴数据
+	 * 
+	 * @return
+	 */
+	@ApiOperation(value = "新建用户贴一贴数据")
+	@RequestMapping(value = "insert/member/stick", method = RequestMethod.POST)
+	public @ResponseBody ResponseResult<Integer> insertStick(@RequestBody MemberStickEntity memberStickEntity) {
+		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
+		memberService.insertStick(memberStickEntity);
 		responseResult.setData(1);
 		return responseResult;
 	}

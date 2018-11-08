@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberInfoEntity;
 import com.issmart.entity.MemberPressEntity;
+import com.issmart.entity.MemberStickEntity;
 import com.issmart.entity.MemberVisitEntity;
 import com.issmart.repository.MemberFeedBackRepository;
 import com.issmart.repository.MemberPressRepository;
 import com.issmart.repository.MemberRepository;
+import com.issmart.repository.MemberStickRepository;
 import com.issmart.repository.MemberVisitRepository;
 import com.issmart.service.MemberService;
 
@@ -32,6 +34,9 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
 	private MemberPressRepository memberPressRepository;
+	
+	@Autowired
+	private MemberStickRepository memberStickRepository;
 
 	@Override
 	public MemberInfoEntity insert(MemberInfoEntity memberInfoEntity) {
@@ -51,15 +56,19 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberFeedBackEntity insertFeedBack(MemberFeedBackEntity memberLikeFeedBackEntity) {
-		memberLikeFeedBackEntity.setTimestamp(System.currentTimeMillis());
 		logger.info("新建一条用户反馈数据"+memberLikeFeedBackEntity.getBeaconMac());
 		return memberFeedBackRepository.insert(memberLikeFeedBackEntity);
 	}
 
 	@Override
 	public MemberPressEntity insertPress(MemberPressEntity memberPressEntity) {
-		memberPressEntity.setTimestamp(System.currentTimeMillis());
 		logger.info("新建一条用户按一按数据"+memberPressEntity.getBeaconMac());
 		return memberPressRepository.insert(memberPressEntity);
+	}
+
+	@Override
+	public MemberStickEntity insertStick(MemberStickEntity memberStickEntity) {
+		logger.info("新建一条用户贴一贴数据"+memberStickEntity.getBeaconMac());
+		return memberStickRepository.insert(memberStickEntity);
 	}
 }
