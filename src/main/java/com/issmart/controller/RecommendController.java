@@ -59,8 +59,8 @@ public class RecommendController {
 		ResponseResult<RecommendCollectionEntity> responseResult = new ResponseResult<RecommendCollectionEntity>();
 		RecommendCollectionEntity resultData = recommendService.findByUnitIdAndBeaconMac(unitId,beaconMac);
 		if(resultData != null && resultData.getRecommendInfoList().size() != 0) {
-			List<RecommendInfoEntity> RecommendInfoList = resultData.getRecommendInfoList();
-			Collections.sort(RecommendInfoList, new Comparator<RecommendInfoEntity>() {
+			List<RecommendInfoEntity> recommendInfoList = resultData.getRecommendInfoList();
+			Collections.sort(recommendInfoList, new Comparator<RecommendInfoEntity>() {
 				@Override
 				public int compare(RecommendInfoEntity o1, RecommendInfoEntity o2) {
 					if (o1.getScore() < o2.getScore()) {
@@ -72,10 +72,18 @@ public class RecommendController {
 					return -1;
 				}
 			});
-			if(boothSize > RecommendInfoList.size()) {
-				boothSize = RecommendInfoList.size();
+			
+			int size = recommendInfoList.size();
+			int index1 = (size >> 1) - (size >> 4);
+			int index2 = (size >> 1) + (size >> 3);
+			if(boothSize > recommendInfoList.size()) {
+				boothSize = recommendInfoList.size();
 			}
-			resultData.setRecommendInfoList(RecommendInfoList.subList(0, boothSize));
+			boothSize -= 2;
+			List<RecommendInfoEntity> recommendInfoListResult = recommendInfoList.subList(0, boothSize);
+			recommendInfoListResult.add(recommendInfoList.get(index1));
+			recommendInfoListResult.add(recommendInfoList.get(index2));
+			resultData.setRecommendInfoList(recommendInfoListResult);
 			recommendService.updateRecommendCollection(unitId,beaconMac);
 		} else {
 			// 没有推荐数据，则重置冷启动
@@ -83,5 +91,10 @@ public class RecommendController {
 		}
 		responseResult.setData(resultData);
 		return responseResult;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(59 >> 2);
+		System.out.println(60 << 1);
 	}
 }

@@ -20,6 +20,7 @@ import com.issmart.entity.MemberStickEntity;
 import com.issmart.entity.MemberVisitEntity;
 import com.issmart.entity.ResponseResult;
 import com.issmart.service.MemberService;
+import com.issmart.service.RecommendService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,9 @@ public class MemberManagerController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private RecommendService recommendService;
 
 	/**
 	 * 新建用户信息
@@ -82,6 +86,7 @@ public class MemberManagerController {
 	public @ResponseBody ResponseResult<Integer> insertLikeFeedBack(@RequestBody MemberFeedBackEntity memberFeedBackEntity) {
 		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
 		memberService.insertFeedBack(memberFeedBackEntity);
+		recommendService.updateRecommendCollection(memberFeedBackEntity.getUnitId(), memberFeedBackEntity.getBeaconMac());
 		responseResult.setData(1);
 		return responseResult;
 	}
