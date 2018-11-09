@@ -84,7 +84,7 @@ public class RecommendController {
 			recommendInfoListResult.add(recommendInfoList.get(index1));
 			recommendInfoListResult.add(recommendInfoList.get(index2));
 			resultData.setRecommendInfoList(recommendInfoListResult);
-			recommendService.updateRecommendCollection(unitId,beaconMac);
+			//recommendService.updateRecommendCollection(unitId,beaconMac);
 		} else {
 			// 没有推荐数据，则重置冷启动
 			recommendService.firstStart();

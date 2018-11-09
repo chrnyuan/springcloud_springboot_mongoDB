@@ -1,6 +1,8 @@
 package com.issmart.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -118,31 +120,46 @@ public class RecommendServiceImpl implements RecommendService {
 	/**
 	 * 异步更新推荐列表 异步不能在当前类中调用
 	 */
-	@Async
+	//@Async
 	@Override
-	public void updateRecommendCollection(String unitIid,String beaconMac) {
+	public void updateRecommendCollection(String unitId,String beaconMac) {
 		// 获取推荐集
-		RecommendCollectionEntity recommendCollectionEntity = recommendRepository.findByUnitIdAndBeaconMac(unitIid,beaconMac);
+		RecommendCollectionEntity recommendCollectionEntity = recommendRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
 		// 查询出所有的展会信息
 		List<BoothInfoEntity> boothInfoEntityList = boothRepository.findAll();
 		// 获取上一次查询时间戳
 		long timeStamp = 1000000000000l;
-		MemberFindLogEntity memberFindLogEntity = memberFindLogRepository.findByUnitIdAndBeaconMac(unitIid,beaconMac);
-		if (memberFindLogEntity != null) {
+		List<MemberFindLogEntity> memberFindLogEntityList = memberFindLogRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
+		MemberFindLogEntity memberFindLogEntity = null;
+		if (memberFindLogEntityList != null && memberFindLogEntityList.size() != 0) {
+			Collections.sort(memberFindLogEntityList, new Comparator<MemberFindLogEntity>() {
+				@Override
+				public int compare(MemberFindLogEntity o1, MemberFindLogEntity o2) {
+					if (o1.getTimeStamp() < o2.getTimeStamp()) {
+						return 1;
+					}
+					if (o1.getTimeStamp() == o2.getTimeStamp()) {
+						return 0;
+					}
+					return -1;
+				}
+			});
+			memberFindLogEntity = memberFindLogEntityList.get(0);
 			timeStamp = memberFindLogEntity.getTimeStamp();
 		} else {
 			memberFindLogEntity = new MemberFindLogEntity();
+			memberFindLogEntity.setUnitId(unitId);
 			memberFindLogEntity.setBeaconMac(beaconMac);
 		}
 		// 处理visit行为数据
-		List<ScoreBalanceEntity> memberVisitScoreBalanceList = opeMemberVisitData(unitIid,beaconMac, timeStamp,
+		List<ScoreBalanceEntity> memberVisitScoreBalanceList = opeMemberVisitData(unitId,beaconMac, timeStamp,
 				boothInfoEntityList);
 		// 获取分数平衡数据
 		List<ScoreBalanceEntity> scoreBalanceList = opeScoreBalanceList(memberVisitScoreBalanceList);
 		// 平衡数据计算反馈数据生成新的平衡数据
-		opeMemberFeedBackData(unitIid,beaconMac,timeStamp,scoreBalanceList);
+		opeMemberFeedBackData(unitId,beaconMac,timeStamp,scoreBalanceList);
 		// 平衡数据计算按一按数据生成新的平衡数据
-		opeMemberPressData(unitIid,beaconMac,timeStamp,scoreBalanceList);
+		opeMemberPressData(unitId,beaconMac,timeStamp,scoreBalanceList);
 		/**
 		 * 没有新的行为数据产生
 		 */
@@ -159,7 +176,7 @@ public class RecommendServiceImpl implements RecommendService {
 		logger.info("更新推荐列表结果："+recommendRepository.insert(recommendCollectionEntity));
 		// 更新查询访问日志时间戳
 		memberFindLogEntity.setTimeStamp(System.currentTimeMillis());
-		memberFindLogRepository.deleteByUnitIdAndBeaconMac(unitIid,beaconMac);
+		memberFindLogRepository.deleteAllByUnitIdAndBeaconMac(unitId,beaconMac);
 		memberFindLogRepository.insert(memberFindLogEntity);
 	}
 

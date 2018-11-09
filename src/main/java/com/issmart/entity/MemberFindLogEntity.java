@@ -61,4 +61,10 @@ public class MemberFindLogEntity {
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
+
+	@Override
+	public String toString() {
+		return "MemberFindLogEntity [id=" + id + ", unitId=" + unitId + ", beaconMac=" + beaconMac + ", timeStamp="
+				+ timeStamp + "]";
+	}
 }

@@ -39,6 +39,12 @@ public class MemberFeedBackEntity {
      * 反馈类型（like:喜欢，dislike:不喜欢）
      */
     private String feedBackType;
+    
+    /**
+     * 反馈类型（on:刷新，off:不刷新）
+     */
+    private String refreshType;
+    
 	public String getId() {
 		return id;
 	}
@@ -74,5 +80,11 @@ public class MemberFeedBackEntity {
 	}
 	public void setUnitId(String unitId) {
 		this.unitId = unitId;
+	}
+	public String getRefreshType() {
+		return refreshType;
+	}
+	public void setRefreshType(String refreshType) {
+		this.refreshType = refreshType;
 	}
 }

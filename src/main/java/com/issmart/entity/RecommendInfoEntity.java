@@ -45,4 +45,11 @@ public class RecommendInfoEntity {
 	public void setDeviceMacList(List<String> deviceMacList) {
 		this.deviceMacList = deviceMacList;
 	}
+	@Override
+	public String toString() {
+		return "RecommendInfoEntity [boothId=" + boothId + ", deviceMacList=" + deviceMacList + ", score=" + score
+				+ ", getBoothId()=" + getBoothId() + ", getScore()=" + getScore() + ", getDeviceMacList()="
+				+ getDeviceMacList() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

@@ -1,5 +1,7 @@
 package com.issmart.repository;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +16,7 @@ import com.issmart.entity.MemberFindLogEntity;
 @Repository
 public interface MemberFindLogRepository extends MongoRepository<MemberFindLogEntity, String> {
 	 
-	int deleteByUnitIdAndBeaconMac(String unitId,String beaconMac);
+	int deleteAllByUnitIdAndBeaconMac(String unitId,String beaconMac);
 	
-	MemberFindLogEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac);
+	List<MemberFindLogEntity> findByUnitIdAndBeaconMac(String unitId,String beaconMac);
 }
