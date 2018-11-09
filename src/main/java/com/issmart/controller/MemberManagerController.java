@@ -87,7 +87,7 @@ public class MemberManagerController {
 	public @ResponseBody ResponseResult<Integer> insertLikeFeedBack(@RequestBody MemberFeedBackEntity memberFeedBackEntity) {
 		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
 		memberService.insertFeedBack(memberFeedBackEntity);
-		if(StringUtil.ON.equals(memberFeedBackEntity.getFeedBackType())) {
+		if(StringUtil.ON.equals(memberFeedBackEntity.getRefreshType())) {
 			recommendService.updateRecommendCollection(memberFeedBackEntity.getUnitId(), memberFeedBackEntity.getBeaconMac());
 		}
 		responseResult.setData(1);
