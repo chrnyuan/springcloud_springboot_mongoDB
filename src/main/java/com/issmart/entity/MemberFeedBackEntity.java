@@ -31,9 +31,9 @@ public class MemberFeedBackEntity {
     private String beaconMac;
     
     /**
-     * deviceMac
+     * targetBeaconMac
      */
-    private String deviceMac;
+    private String targetBeaconMac;
     
     /**
      * 反馈类型（like:喜欢，dislike:不喜欢）
@@ -63,11 +63,11 @@ public class MemberFeedBackEntity {
 	public void setBeaconMac(String beaconMac) {
 		this.beaconMac = beaconMac;
 	}
-	public String getDeviceMac() {
-		return deviceMac;
+	public String getTargetBeaconMac() {
+		return targetBeaconMac;
 	}
-	public void setDeviceMac(String deviceMac) {
-		this.deviceMac = deviceMac;
+	public void setTargetBeaconMac(String targetBeaconMac) {
+		this.targetBeaconMac = targetBeaconMac;
 	}
 	public String getFeedBackType() {
 		return feedBackType;

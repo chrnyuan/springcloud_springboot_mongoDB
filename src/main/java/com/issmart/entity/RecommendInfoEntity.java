@@ -15,6 +15,16 @@ public class RecommendInfoEntity {
     private List<String> deviceMacList;
     
     /**
+     * deviceMac
+     */
+    private String deviceMac;
+    
+    /**
+     * targetBeaconMac
+     */
+    private String targetBeaconMac;
+    
+    /**
      * score
      */
     private double score;
@@ -26,6 +36,10 @@ public class RecommendInfoEntity {
 		super();
 		this.boothId = boothId;
 		this.deviceMacList = deviceMacList;
+	}
+	public RecommendInfoEntity(String targetBeaconMac) {
+		super();
+		this.targetBeaconMac = targetBeaconMac;
 	}
 	public String getBoothId() {
 		return boothId;
@@ -45,11 +59,21 @@ public class RecommendInfoEntity {
 	public void setDeviceMacList(List<String> deviceMacList) {
 		this.deviceMacList = deviceMacList;
 	}
+	public String getDeviceMac() {
+		return deviceMac;
+	}
+	public void setDeviceMac(String deviceMac) {
+		this.deviceMac = deviceMac;
+	}
+	public String getTargetBeaconMac() {
+		return targetBeaconMac;
+	}
+	public void setTargetBeaconMac(String targetBeaconMac) {
+		this.targetBeaconMac = targetBeaconMac;
+	}
 	@Override
 	public String toString() {
-		return "RecommendInfoEntity [boothId=" + boothId + ", deviceMacList=" + deviceMacList + ", score=" + score
-				+ ", getBoothId()=" + getBoothId() + ", getScore()=" + getScore() + ", getDeviceMacList()="
-				+ getDeviceMacList() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+		return "RecommendInfoEntity [boothId=" + boothId + ", deviceMacList=" + deviceMacList + ", deviceMac="
+				+ deviceMac + ", targetBeaconMac=" + targetBeaconMac + ", score=" + score + "]";
 	}
 }

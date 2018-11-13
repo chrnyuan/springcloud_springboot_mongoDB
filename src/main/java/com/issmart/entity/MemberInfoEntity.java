@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Administrator
  *
  */
-@Document(collection = "memberInfo")
+@Document(collection = "MemberInfo")
 public class MemberInfoEntity {
 
 	/**

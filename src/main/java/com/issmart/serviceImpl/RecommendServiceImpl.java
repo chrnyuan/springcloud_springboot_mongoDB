@@ -8,21 +8,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.issmart.entity.BoothFeedBackEntity;
 import com.issmart.entity.BoothInfoEntity;
-import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberFindLogEntity;
 import com.issmart.entity.MemberInfoEntity;
 import com.issmart.entity.MemberPressEntity;
 import com.issmart.entity.MemberVisitEntity;
-import com.issmart.entity.RecommendCollectionEntity;
+import com.issmart.entity.RecommendBoothCollectionEntity;
 import com.issmart.entity.RecommendInfoEntity;
 import com.issmart.entity.ScoreBalanceEntity;
 import com.issmart.entity.ScoreLabelEntity;
 import com.issmart.entity.ScoreResultEntity;
+import com.issmart.repository.BoothFeedBackRepository;
 import com.issmart.repository.BoothRepository;
-import com.issmart.repository.MemberFeedBackRepository;
 import com.issmart.repository.MemberFindLogRepository;
 import com.issmart.repository.MemberPressRepository;
 import com.issmart.repository.MemberRepository;
@@ -31,6 +32,7 @@ import com.issmart.repository.RecommendRepository;
 import com.issmart.service.RecommendService;
 import com.issmart.util.ScoreEnum;
 import com.issmart.util.ScoreUtil;
+import com.issmart.util.StringUtil;
 
 @Service
 public class RecommendServiceImpl implements RecommendService {
@@ -53,7 +55,7 @@ public class RecommendServiceImpl implements RecommendService {
 	private MemberFindLogRepository memberFindLogRepository;
 	
 	@Autowired
-	private MemberFeedBackRepository memberFeedBackRepository;
+	private BoothFeedBackRepository boothFeedBackRepository;
 	
 	@Autowired
 	private MemberPressRepository memberPressRepository;
@@ -64,7 +66,7 @@ public class RecommendServiceImpl implements RecommendService {
 			List<MemberInfoEntity> memberInfoEntityList = memberRepository.findAll();
 			List<BoothInfoEntity> boothInfoEntityList = boothRepository.findAll();
 			for (MemberInfoEntity memberInfoEntity : memberInfoEntityList) {
-				RecommendCollectionEntity recommendCollectionEntity = new RecommendCollectionEntity();
+				RecommendBoothCollectionEntity recommendCollectionEntity = new RecommendBoothCollectionEntity();
 				recommendCollectionEntity.setUnitId(memberInfoEntity.getUnitId());
 				recommendCollectionEntity.setBeaconMac(memberInfoEntity.getBeaconMac());
 				opeRecommendCollection(recommendCollectionEntity, boothInfoEntityList);
@@ -81,7 +83,7 @@ public class RecommendServiceImpl implements RecommendService {
 	 * @param boothInfoEntityList
 	 * @return
 	 */
-	public RecommendCollectionEntity opeRecommendCollection(RecommendCollectionEntity recommendCollectionEntity,
+	public RecommendBoothCollectionEntity opeRecommendCollection(RecommendBoothCollectionEntity recommendCollectionEntity,
 			List<BoothInfoEntity> boothInfoEntityList) {
 		MemberInfoEntity memberInfoEntity = memberRepository.findByUnitIdAndBeaconMac(recommendCollectionEntity.getUnitId(),recommendCollectionEntity.getBeaconMac());
 		List<RecommendInfoEntity> recommendInfoList = new ArrayList<>();
@@ -112,23 +114,23 @@ public class RecommendServiceImpl implements RecommendService {
 	 * 查询推荐信息
 	 */
 	@Override
-	public RecommendCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac) {
+	public RecommendBoothCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac) {
 		return recommendRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
 	}
 
 	/**
 	 * 异步更新推荐列表 异步不能在当前类中调用
 	 */
-	//@Async
+	@Async
 	@Override
 	public void updateRecommendCollection(String unitId,String beaconMac) {
 		// 获取推荐集
-		RecommendCollectionEntity recommendCollectionEntity = recommendRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
+		RecommendBoothCollectionEntity recommendCollectionEntity = recommendRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
 		// 查询出所有的展会信息
 		List<BoothInfoEntity> boothInfoEntityList = boothRepository.findAll();
 		// 获取上一次查询时间戳
 		long timeStamp = 1000000000000l;
-		List<MemberFindLogEntity> memberFindLogEntityList = memberFindLogRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
+		List<MemberFindLogEntity> memberFindLogEntityList = memberFindLogRepository.findByUnitIdAndBeaconMacAndRecommendType(unitId,beaconMac,StringUtil.RECOMMEND_BOOTH);
 		MemberFindLogEntity memberFindLogEntity = null;
 		if (memberFindLogEntityList != null && memberFindLogEntityList.size() != 0) {
 			Collections.sort(memberFindLogEntityList, new Comparator<MemberFindLogEntity>() {
@@ -148,6 +150,7 @@ public class RecommendServiceImpl implements RecommendService {
 		} else {
 			memberFindLogEntity = new MemberFindLogEntity();
 			memberFindLogEntity.setUnitId(unitId);
+			memberFindLogEntity.setRecommendType(StringUtil.RECOMMEND_BOOTH);
 			memberFindLogEntity.setBeaconMac(beaconMac);
 		}
 		// 处理visit行为数据
@@ -175,7 +178,8 @@ public class RecommendServiceImpl implements RecommendService {
 		logger.info("更新推荐列表结果："+recommendRepository.insert(recommendCollectionEntity));
 		// 更新查询访问日志时间戳
 		memberFindLogEntity.setTimeStamp(System.currentTimeMillis());
-		memberFindLogRepository.deleteAllByUnitIdAndBeaconMac(unitId,beaconMac);
+		memberFindLogEntity.setRecommendType(StringUtil.RECOMMEND_BOOTH);
+		memberFindLogRepository.deleteAllByUnitIdAndBeaconMacAndRecommendType(unitId,beaconMac,StringUtil.RECOMMEND_BOOTH);
 		memberFindLogRepository.insert(memberFindLogEntity);
 	}
 
@@ -230,17 +234,17 @@ public class RecommendServiceImpl implements RecommendService {
 	 */
 	private void opeMemberFeedBackData(String unitId,String beaconMac, long timestamp,List<ScoreBalanceEntity> scoreBalanceList) {
 		// 查询反馈数据
-		List<MemberFeedBackEntity> feedBackList = memberFeedBackRepository.findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(unitId,beaconMac, timestamp);
+		List<BoothFeedBackEntity> feedBackList = boothFeedBackRepository.findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(unitId,beaconMac, timestamp);
 		// 没有反馈行为
 		if (feedBackList.size() == 0) return ;
-		for (MemberFeedBackEntity memberFeedBackEntity : feedBackList) {
+		for (BoothFeedBackEntity boothFeedBackEntity : feedBackList) {
 			double score = 0;
 			boolean flag = true;
 			// 平衡数据集中存在此反馈deviceMac
 			for (ScoreBalanceEntity scoreBalanceEntity : scoreBalanceList) {
-				if (memberFeedBackEntity.getDeviceMac().equals(scoreBalanceEntity.getDeviceMac())) {
+				if (boothFeedBackEntity.getDeviceMac().equals(scoreBalanceEntity.getDeviceMac())) {
 					flag = false;
-					if (ScoreUtil.DISLIKE.equals(memberFeedBackEntity.getFeedBackType())) {
+					if (ScoreUtil.DISLIKE.equals(boothFeedBackEntity.getFeedBackType())) {
 						score += ScoreEnum.DISLIKE.getValue();
 						scoreBalanceEntity.setExistDisLikeBehavior(true);
 					} else {
@@ -256,14 +260,14 @@ public class RecommendServiceImpl implements RecommendService {
 			// 平衡数据集中不存在此反馈deviceMac
 			if (flag) {
 				ScoreBalanceEntity scoreBalanceEntity = new ScoreBalanceEntity();
-				if (ScoreUtil.DISLIKE.equals(memberFeedBackEntity.getFeedBackType())) {
+				if (ScoreUtil.DISLIKE.equals(boothFeedBackEntity.getFeedBackType())) {
 					score += ScoreEnum.DISLIKE.getValue();
 					scoreBalanceEntity.setExistDisLikeBehavior(true);
 				} else {
 					score += ScoreEnum.LIKE.getValue();
 					scoreBalanceEntity.setExistLikeBehavior(true);
 				}
-				scoreBalanceEntity.setDeviceMac(memberFeedBackEntity.getDeviceMac());
+				scoreBalanceEntity.setDeviceMac(boothFeedBackEntity.getDeviceMac());
 				scoreBalanceEntity.setLabelScore(score);
 				scoreBalanceList.add(scoreBalanceEntity);
 			}
@@ -343,7 +347,7 @@ public class RecommendServiceImpl implements RecommendService {
 	 * @return
 	 */
 	private List<ScoreResultEntity> opeScoreBalance(List<ScoreBalanceEntity> scoreBalanceList,
-			RecommendCollectionEntity recommendCollectionEntity, List<BoothInfoEntity> boothInfoEntityList) {
+			RecommendBoothCollectionEntity recommendCollectionEntity, List<BoothInfoEntity> boothInfoEntityList) {
 		/*
 		 * 获取每个标签应加分数
 		 */
@@ -409,7 +413,7 @@ public class RecommendServiceImpl implements RecommendService {
 	 * 获取最新的推荐列表
 	 * @param recommendCollectionEntity
 	 */
-	private void opeGetNewRecommend(RecommendCollectionEntity recommendCollectionEntity,List<ScoreResultEntity> scoreResultEntityList) {
+	private void opeGetNewRecommend(RecommendBoothCollectionEntity recommendCollectionEntity,List<ScoreResultEntity> scoreResultEntityList) {
 		List<RecommendInfoEntity> RecommendInfoList = recommendCollectionEntity.getRecommendInfoList();
 		for (RecommendInfoEntity recommendInfoEntity : RecommendInfoList) {
 			for (ScoreResultEntity scoreResultEntity : scoreResultEntityList) {

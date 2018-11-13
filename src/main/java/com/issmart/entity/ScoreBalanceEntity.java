@@ -21,6 +21,11 @@ public class ScoreBalanceEntity {
 	private String deviceMac;
 	
 	/**
+	 * targetBeaconMac
+	 */
+	private String targetBeaconMac;
+	
+	/**
 	 * 当前展台应减实体
 	 */
 	private double score;
@@ -134,5 +139,13 @@ public class ScoreBalanceEntity {
 
 	public void setUnitId(String unitId) {
 		this.unitId = unitId;
+	}
+
+	public String getTargetBeaconMac() {
+		return targetBeaconMac;
+	}
+
+	public void setTargetBeaconMac(String targetBeaconMac) {
+		this.targetBeaconMac = targetBeaconMac;
 	}
 }

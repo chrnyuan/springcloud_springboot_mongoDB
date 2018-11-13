@@ -26,6 +26,10 @@ public class MemberFindLogEntity {
 	 */
 	private String beaconMac;
 	/**
+	 * recommendType
+	 */
+	private String recommendType;
+	/**
 	 * 上一次查询时间戳
 	 */
 	private long timeStamp;
@@ -56,6 +60,14 @@ public class MemberFindLogEntity {
 
 	public long getTimeStamp() {
 		return timeStamp;
+	}
+	
+	public String getRecommendType() {
+		return recommendType;
+	}
+
+	public void setRecommendType(String recommendType) {
+		this.recommendType = recommendType;
 	}
 
 	public void setTimeStamp(long timeStamp) {

@@ -20,7 +20,7 @@ public enum ScoreEnum {
 	 */
 	VISITOUTTEN("visitOutTen",0.1),
 	/**
-	 * 5分钟以内press行为15分
+	 * 5分钟以内press行为20分
 	 */
 	PRESSINFIVE("pressInFive",20),
 	/**
@@ -28,19 +28,19 @@ public enum ScoreEnum {
 	 */
 	PRESSINFIVEANDTEN("pressInFiveAndTen",10),
 	/**
-	 * 大于10分钟press行为5分
+	 * 大于10分钟press行为1分
 	 */
 	PRESSOUTTEN("pressOutTen",1),
 	/**
-	 * 5分钟以内press行为15分
+	 * 5分钟以内press行为20分
 	 */
-	STICKINFIVE("stickInFive",15),
+	STICKINFIVE("stickInFive",20),
 	/**
 	 * 5分钟到10分钟press行为10分
 	 */
-	STICKINFIVEANDTEN("stickInFiveAndTen",8),
+	STICKINFIVEANDTEN("stickInFiveAndTen",10),
 	/**
-	 * 大于10分钟press行为5分
+	 * 大于10分钟press行为1分
 	 */
 	STICKOUTTEN("stickOutTen",1),
 	/**

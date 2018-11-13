@@ -1,7 +1,7 @@
 package com.issmart.entity;
 
 /**
- * 计算得每个boothId最终应加分数
+ * 计算得每个最终应加分数
  * 
  * @author Administrator
  *
@@ -17,6 +17,11 @@ public class ScoreResultEntity {
 	 * boothId
 	 */
 	private String boothId;
+	
+	/**
+	 * targetBeaconMac
+	 */
+	private String targetBeaconMac;
 	
 	/**
 	 * 最终应加分数
@@ -36,7 +41,7 @@ public class ScoreResultEntity {
 		super();
 		this.boothId = boothId;
 	}
-
+	
 	public String getBoothId() {
 		return boothId;
 	}
@@ -67,5 +72,13 @@ public class ScoreResultEntity {
 
 	public void setUnitId(String unitId) {
 		this.unitId = unitId;
+	}
+
+	public String getTargetBeaconMac() {
+		return targetBeaconMac;
+	}
+
+	public void setTargetBeaconMac(String targetBeaconMac) {
+		this.targetBeaconMac = targetBeaconMac;
 	}
 }

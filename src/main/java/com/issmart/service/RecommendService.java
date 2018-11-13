@@ -2,7 +2,7 @@ package com.issmart.service;
 
 import org.springframework.stereotype.Service;
 
-import com.issmart.entity.RecommendCollectionEntity;
+import com.issmart.entity.RecommendBoothCollectionEntity;
 
 @Service
 public interface RecommendService{
@@ -27,5 +27,5 @@ public interface RecommendService{
 	 * 
 	 * @return
 	 */
-	public RecommendCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac);
+	public RecommendBoothCollectionEntity findByUnitIdAndBeaconMac(String unitId,String beaconMac);
 }

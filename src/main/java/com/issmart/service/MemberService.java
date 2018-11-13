@@ -2,6 +2,7 @@ package com.issmart.service;
 
 import org.springframework.stereotype.Service;
 
+import com.issmart.entity.BoothFeedBackEntity;
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberInfoEntity;
 import com.issmart.entity.MemberPressEntity;
@@ -30,7 +31,14 @@ public interface MemberService{
 	 * 
 	 * @return
 	 */
-	public MemberFeedBackEntity insertFeedBack(MemberFeedBackEntity memberFeedBackEntity);
+	public MemberFeedBackEntity insertMemberFeedBack(MemberFeedBackEntity memberFeedBackEntity);
+	
+	/**
+	 * 新建展台反馈行为
+	 * 
+	 * @return
+	 */
+	public BoothFeedBackEntity insertBoothFeedBack(BoothFeedBackEntity boothFeedBackEntity);
 	
 	/**
 	 * 新建用户按一按行为

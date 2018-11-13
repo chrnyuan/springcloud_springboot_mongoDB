@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.issmart.entity.BoothFeedBackEntity;
 import com.issmart.entity.MemberFeedBackEntity;
 import com.issmart.entity.MemberInfoEntity;
 import com.issmart.entity.MemberPressEntity;
 import com.issmart.entity.MemberStickEntity;
 import com.issmart.entity.MemberVisitEntity;
+import com.issmart.repository.BoothFeedBackRepository;
 import com.issmart.repository.MemberFeedBackRepository;
 import com.issmart.repository.MemberPressRepository;
 import com.issmart.repository.MemberRepository;
@@ -31,6 +33,9 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
 	private MemberFeedBackRepository memberFeedBackRepository;
+	
+	@Autowired
+	private BoothFeedBackRepository boothFeedBackRepository;
 	
 	@Autowired
 	private MemberPressRepository memberPressRepository;
@@ -55,9 +60,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberFeedBackEntity insertFeedBack(MemberFeedBackEntity memberLikeFeedBackEntity) {
+	public MemberFeedBackEntity insertMemberFeedBack(MemberFeedBackEntity memberLikeFeedBackEntity) {
 		logger.info("新建一条用户反馈数据"+memberLikeFeedBackEntity.getBeaconMac());
 		return memberFeedBackRepository.insert(memberLikeFeedBackEntity);
+	}
+	
+	@Override
+	public BoothFeedBackEntity insertBoothFeedBack(BoothFeedBackEntity boothFeedBackEntity) {
+		logger.info("新建一条用户反馈数据"+boothFeedBackEntity.getBeaconMac());
+		return boothFeedBackRepository.insert(boothFeedBackEntity);
 	}
 
 	@Override
