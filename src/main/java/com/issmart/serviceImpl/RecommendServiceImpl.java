@@ -8,7 +8,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.issmart.entity.BoothInfoEntity;
@@ -419,8 +418,8 @@ public class RecommendServiceImpl implements RecommendService {
 						recommendInfoEntity.setScore(ScoreEnum.RESETBEHAVIOR.getValue());
 					} else {
 						double score = recommendInfoEntity.getScore() + scoreResultEntity.getScore();
-						if(score < ScoreEnum.RESETBEHAVIOR.getValue()) {
-							recommendInfoEntity.setScore(ScoreEnum.RESETBEHAVIOR.getValue());
+						if(score < ScoreEnum.RESETLABELBEHAVIOR.getValue()) {
+							recommendInfoEntity.setScore(ScoreEnum.RESETLABELBEHAVIOR.getValue());
 						} else {
 							recommendInfoEntity.setScore(score);
 						}

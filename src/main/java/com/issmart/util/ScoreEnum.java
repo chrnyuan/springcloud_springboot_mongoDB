@@ -51,10 +51,16 @@ public enum ScoreEnum {
 	 * stick行为10分
 	 */
 	DISLIKE("dislike",-20),
+	
+	/**
+	 * 标签最低分数
+	 */
+	RESETLABELBEHAVIOR("resetLabelBehavior",-10),
+	
 	/**
 	 * 重置
 	 */
-	RESETBEHAVIOR("resetBehavior",-10);
+	RESETBEHAVIOR("resetBehavior",-50);
 	
     private final String key;
     private final double value;
