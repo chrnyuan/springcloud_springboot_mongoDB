@@ -8,7 +8,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.issmart.entity.BoothFeedBackEntity;
@@ -121,7 +120,7 @@ public class RecommendServiceImpl implements RecommendService {
 	/**
 	 * 异步更新展台推荐列表 异步不能在当前类中调用
 	 */
-	@Async
+	//@Async
 	@Override
 	public void updateRecommendCollection(String unitId,String beaconMac) {
 		// 获取推荐集
@@ -423,7 +422,11 @@ public class RecommendServiceImpl implements RecommendService {
 					} else {
 						double score = recommendInfoEntity.getScore() + scoreResultEntity.getScore();
 						if(score < ScoreEnum.RESETLABELBEHAVIOR.getValue()) {
-							recommendInfoEntity.setScore(ScoreEnum.RESETLABELBEHAVIOR.getValue());
+							if(recommendInfoEntity.getScore() <= ScoreEnum.RESETLABELBEHAVIOR.getValue()) {
+								recommendInfoEntity.setScore(recommendInfoEntity.getScore()+ScoreEnum.RESETLABELREREATBEHAVIOR.getValue());
+							} else {
+								recommendInfoEntity.setScore(ScoreEnum.RESETLABELBEHAVIOR.getValue());	
+							}
 						} else {
 							recommendInfoEntity.setScore(score);
 						}

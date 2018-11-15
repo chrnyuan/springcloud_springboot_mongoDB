@@ -122,6 +122,7 @@ public class MemberManagerController {
 	public @ResponseBody ResponseResult<Integer> insertPress(@RequestBody MemberPressEntity memberPressEntity) {
 		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
 		memberService.insertPress(memberPressEntity);
+		recommendService.updateRecommendCollection(memberPressEntity.getUnitId(), memberPressEntity.getBeaconMac());
 		responseResult.setData(1);
 		return responseResult;
 	}

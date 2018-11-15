@@ -404,7 +404,11 @@ public class RecommendMemberServiceImpl implements RecommendMemberService {
 					} else {
 						double score = recommendInfoEntity.getScore() + scoreResultEntity.getScore();
 						if(score < ScoreEnum.RESETLABELBEHAVIOR.getValue()) {
-							recommendInfoEntity.setScore(ScoreEnum.RESETLABELBEHAVIOR.getValue());
+							if(recommendInfoEntity.getScore() <= ScoreEnum.RESETLABELBEHAVIOR.getValue()) {
+								recommendInfoEntity.setScore(recommendInfoEntity.getScore()+ScoreEnum.RESETLABELREREATBEHAVIOR.getValue());
+							} else {
+								recommendInfoEntity.setScore(ScoreEnum.RESETLABELBEHAVIOR.getValue());	
+							}
 						} else {
 							recommendInfoEntity.setScore(score);
 						}

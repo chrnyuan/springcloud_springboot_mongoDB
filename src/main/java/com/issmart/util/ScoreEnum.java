@@ -58,6 +58,11 @@ public enum ScoreEnum {
 	RESETLABELBEHAVIOR("resetLabelBehavior",-10),
 	
 	/**
+	 * 标签弱影响累计分数
+	 */
+	RESETLABELREREATBEHAVIOR("resetLabelRepeatBehavior",-1),
+	
+	/**
 	 * 重置
 	 */
 	RESETBEHAVIOR("resetBehavior",-50);
