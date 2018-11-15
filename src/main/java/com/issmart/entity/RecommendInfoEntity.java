@@ -25,6 +25,11 @@ public class RecommendInfoEntity {
     private String targetBeaconMac;
     
     /**
+     * targetBeaconId
+     */
+    private String targetBeaconId;
+    
+    /**
      * score
      */
     private double score;
@@ -37,9 +42,10 @@ public class RecommendInfoEntity {
 		this.boothId = boothId;
 		this.deviceMacList = deviceMacList;
 	}
-	public RecommendInfoEntity(String targetBeaconMac) {
+	public RecommendInfoEntity(String targetBeaconMac, String targetBeaconId) {
 		super();
 		this.targetBeaconMac = targetBeaconMac;
+		this.targetBeaconId = targetBeaconId;
 	}
 	public String getBoothId() {
 		return boothId;
@@ -70,6 +76,12 @@ public class RecommendInfoEntity {
 	}
 	public void setTargetBeaconMac(String targetBeaconMac) {
 		this.targetBeaconMac = targetBeaconMac;
+	}
+	public String getTargetBeaconId() {
+		return targetBeaconId;
+	}
+	public void setTargetBeaconId(String targetBeaconId) {
+		this.targetBeaconId = targetBeaconId;
 	}
 	@Override
 	public String toString() {

@@ -22,7 +22,7 @@ public class BoothServiceImpl implements BoothService{
 		boothRepository.deleteByUnitIdAndDeviceMac(boothInfoEntity.getUnitId(),boothInfoEntity.getDeviceMac());
 		boothInfoEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		BoothInfoEntity boothInfoEntityResult = boothRepository.insert(boothInfoEntity);
-		logger.info("更新展台"+boothInfoEntityResult.getDeviceMac());
+		logger.info("保存展台信息"+boothInfoEntityResult.getDeviceMac());
 		return boothInfoEntity;
 	}
 }

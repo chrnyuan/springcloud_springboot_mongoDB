@@ -70,7 +70,7 @@ public class RecommendServiceImpl implements RecommendService {
 				recommendCollectionEntity.setUnitId(memberInfoEntity.getUnitId());
 				recommendCollectionEntity.setBeaconMac(memberInfoEntity.getBeaconMac());
 				opeRecommendCollection(recommendCollectionEntity, boothInfoEntityList);
-				logger.info("推荐系统冷启动成功");
+				logger.info("展台推荐冷启动成功");
 			}
 		}
 		return 1;
@@ -119,7 +119,7 @@ public class RecommendServiceImpl implements RecommendService {
 	}
 
 	/**
-	 * 异步更新推荐列表 异步不能在当前类中调用
+	 * 异步更新展台推荐列表 异步不能在当前类中调用
 	 */
 	@Async
 	@Override
@@ -159,7 +159,7 @@ public class RecommendServiceImpl implements RecommendService {
 		// 获取分数平衡数据
 		List<ScoreBalanceEntity> scoreBalanceList = opeScoreBalanceList(memberVisitScoreBalanceList);
 		// 平衡数据计算反馈数据生成新的平衡数据
-		opeMemberFeedBackData(unitId,beaconMac,timeStamp,scoreBalanceList);
+		opeBoothFeedBackData(unitId,beaconMac,timeStamp,scoreBalanceList);
 		// 平衡数据计算按一按数据生成新的平衡数据
 		opeMemberPressData(unitId,beaconMac,timeStamp,scoreBalanceList);
 		/**
@@ -175,7 +175,7 @@ public class RecommendServiceImpl implements RecommendService {
 		opeGetNewRecommend(recommendCollectionEntity,scoreResultEntityList);
 		recommendRepository.deleteByUnitIdAndBeaconMac(recommendCollectionEntity.getUnitId(),recommendCollectionEntity.getBeaconMac());
 		recommendCollectionEntity.setCreatedTimeStamp(System.currentTimeMillis());
-		logger.info("更新推荐列表结果："+recommendRepository.insert(recommendCollectionEntity));
+		logger.info("更新展台推荐列表结果："+recommendRepository.insert(recommendCollectionEntity));
 		// 更新查询访问日志时间戳
 		memberFindLogEntity.setTimeStamp(System.currentTimeMillis());
 		memberFindLogEntity.setRecommendType(StringUtil.RECOMMEND_BOOTH);
@@ -228,11 +228,11 @@ public class RecommendServiceImpl implements RecommendService {
 	}
 	
 	/**
-	 * 更新列表，计算用户反馈行为数据
+	 * 更新列表，计算展台反馈行为数据
 	 * 
 	 * @param recommendCollectionEntity
 	 */
-	private void opeMemberFeedBackData(String unitId,String beaconMac, long timestamp,List<ScoreBalanceEntity> scoreBalanceList) {
+	private void opeBoothFeedBackData(String unitId,String beaconMac, long timestamp,List<ScoreBalanceEntity> scoreBalanceList) {
 		// 查询反馈数据
 		List<BoothFeedBackEntity> feedBackList = boothFeedBackRepository.findByUnitIdAndBeaconMacAndTimestampGreaterThanEqual(unitId,beaconMac, timestamp);
 		// 没有反馈行为

@@ -28,6 +28,10 @@ public class MemberInfoEntity {
      */
     private String beaconMac;
     /**
+     * beaconId
+     */
+    private String beaconId;
+    /**
      * 创建时间戳
      */
     private long createdTimeStamp;
@@ -64,5 +68,11 @@ public class MemberInfoEntity {
 	}
 	public void setCreatedTimeStamp(long createdTimeStamp) {
 		this.createdTimeStamp = createdTimeStamp;
+	}
+	public String getBeaconId() {
+		return beaconId;
+	}
+	public void setBeaconId(String beaconId) {
+		this.beaconId = beaconId;
 	}
 }

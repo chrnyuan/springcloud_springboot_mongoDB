@@ -2,8 +2,6 @@ package com.issmart.controller;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +32,6 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "用户信息", description = "用户信息", tags = { "2" })
 public class MemberManagerController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MemberManagerController.class);
-
 	@Autowired
 	private MemberService memberService;
 	
@@ -70,7 +66,6 @@ public class MemberManagerController {
 	@RequestMapping(value = "insert/member/visit", method = RequestMethod.POST)
 	public @ResponseBody ResponseResult<Integer> insertVisit(@RequestBody Map<String, Object> paramMap) {
 		ResponseResult<Integer> responseResult = new ResponseResult<Integer>();
-		logger.debug("新建visit："+paramMap);
 		Map<String, Object> param = JSON.parseObject(paramMap.get("message").toString(), Map.class);
 		if (param.get("rssi") != null && Integer.parseInt(param.get("rssi").toString()) > 80) {
 			return null;

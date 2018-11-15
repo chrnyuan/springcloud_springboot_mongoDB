@@ -79,7 +79,7 @@ public class RecommendMemberServiceImpl implements RecommendMemberService {
 		// 获取当前人员信息
 		MemberInfoEntity memberInfoEntity = memberRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
 		for (MemberInfoEntity memberInfoEntityParam : memberInfoEntityList) {
-			RecommendInfoEntity recommendInfoEntity = new RecommendInfoEntity(memberInfoEntityParam.getBeaconMac());
+			RecommendInfoEntity recommendInfoEntity = new RecommendInfoEntity(memberInfoEntityParam.getBeaconMac(),memberInfoEntityParam.getBeaconId());
 			int score = 0;
 			for (String paramLabel : memberInfoEntityParam.getLabelList()) {
 				for (String memberLabel : memberInfoEntity.getLabelList()) {
@@ -119,7 +119,7 @@ public class RecommendMemberServiceImpl implements RecommendMemberService {
 		// 获取当前人员信息
 		MemberInfoEntity memberInfoEntity = memberRepository.findByUnitIdAndBeaconMac(unitId,beaconMac);
 		for (MemberInfoEntity memberInfoEntityParam : memberInfoEntityList) {
-			RecommendInfoEntity recommendInfoEntity = new RecommendInfoEntity(memberInfoEntityParam.getBeaconMac());
+			RecommendInfoEntity recommendInfoEntity = new RecommendInfoEntity(memberInfoEntityParam.getBeaconMac(),memberInfoEntityParam.getBeaconId());
 			int score = 0;
 			for (String paramLabel : memberInfoEntityParam.getLabelList()) {
 				for (String memberLabel : memberInfoEntity.getLabelList()) {
@@ -148,7 +148,7 @@ public class RecommendMemberServiceImpl implements RecommendMemberService {
 //			});
 //			recommendInfoList = recommendInfoList.subList(0, 100);
 //		}
-		logger.info(recommendMemberCollectionEntity.getBeaconMac() + "更新列表");
+		logger.info(recommendMemberCollectionEntity.getBeaconMac() + "保存用户生成推荐列表");
 		recommendMemberCollectionEntity.setUnitId(unitId);
 		recommendMemberCollectionEntity.setBeaconMac(beaconMac);
 		recommendMemberCollectionEntity.setRecommendInfoList(recommendInfoList);
@@ -158,7 +158,7 @@ public class RecommendMemberServiceImpl implements RecommendMemberService {
 	}
 
 	/**
-	 * 异步更新推荐列表 异步不能在当前类中调用
+	 * 异步更新用户推荐列表 异步不能在当前类中调用
 	 */
 	@Async
 	@Override
@@ -209,7 +209,7 @@ public class RecommendMemberServiceImpl implements RecommendMemberService {
 		opeGetNewRecommend(recommendMemberCollectionEntity,scoreResultEntityList);
 		recommendMemberRepository.deleteByUnitIdAndBeaconMac(unitId,beaconMac);
 		recommendMemberCollectionEntity.setCreatedTimeStamp(System.currentTimeMillis());
-		logger.info("更新推荐列表结果："+recommendMemberRepository.insert(recommendMemberCollectionEntity));
+		logger.info("更新用户推荐列表结果："+recommendMemberRepository.insert(recommendMemberCollectionEntity));
 		// 更新查询访问日志时间戳
 		memberFindLogEntity.setTimeStamp(System.currentTimeMillis());
 		memberFindLogRepository.deleteAllByUnitIdAndBeaconMacAndRecommendType(unitId,beaconMac,StringUtil.RECOMMEND_MEMBER);

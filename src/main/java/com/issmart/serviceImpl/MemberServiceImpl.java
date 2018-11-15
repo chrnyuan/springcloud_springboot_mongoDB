@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
 		memberRepository.deleteByUnitIdAndBeaconMac(memberInfoEntity.getUnitId(),memberInfoEntity.getBeaconMac());
 		memberInfoEntity.setCreatedTimeStamp(System.currentTimeMillis());
 		MemberInfoEntity memberInfoEntityResult = memberRepository.insert(memberInfoEntity);
-		logger.info("更新展台"+memberInfoEntityResult.getBeaconMac());
+		logger.info("保存用户信息"+memberInfoEntityResult.getBeaconMac());
 		return memberInfoEntityResult;
 	}
 
@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public BoothFeedBackEntity insertBoothFeedBack(BoothFeedBackEntity boothFeedBackEntity) {
-		logger.info("新建一条用户反馈数据"+boothFeedBackEntity.getBeaconMac());
+		logger.info("新建一条展台反馈数据"+boothFeedBackEntity.getBeaconMac());
 		return boothFeedBackRepository.insert(boothFeedBackEntity);
 	}
 
